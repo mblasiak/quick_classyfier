@@ -10,15 +10,18 @@ def classfie(folder):
     values = []
     i = 1
     for filename in os.listdir(folder):
+
         img = cv2.imread(os.path.join(folder,filename))
 
         if img is not None:
             idexes.append(i)
             i = i + 1
 
+            print('kooos')
+            values.append(detect_text(os.path.join(folder,filename)))
+            img=cv2.resize(img,(500,500))
             cv2.imshow('<----brak zniżkia    zniżka--->', img)
 
-            values.append(detect_text(os.path.join(folder,filename)))
             k = cv2.waitKey(0)
             if k == 81:
                 labels.append(False)
