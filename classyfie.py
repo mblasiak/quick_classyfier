@@ -1,23 +1,39 @@
 import cv2
 import os
+from text_from_img import detect_text
+import pandas as pd
 
-def load_images_from_folder(folder):
-    images = []
+
+def classfie(folder):
+    idexes = []
+    labels = []
+    values = []
+    i = 1
     for filename in os.listdir(folder):
         img = cv2.imread(os.path.join(folder,filename))
+
         if img is not None:
-            images.append(img)
-    return images
+            idexes.append(i)
+            i = i + 1
 
+            cv2.imshow('<----brak zniżkia    zniżka--->', img)
 
+            values.append(detect_text(os.path.join(folder,filename)))
+            k = cv2.waitKey(0)
+            if k == 81:
+                labels.append(False)
 
-imgs=load_images_from_folder('../src')
+            elif k == 83:
+                labels.append(True)
 
-for im in imgs:
-    cv2.imshow('<----brak zniżkia    zniżka--->',im)
-    k = cv2.waitKey(0)
-    if k == 81:
-        print('Left')
-    elif k == 83:
-        print('Right')
+    print(values)
+    print(labels)
+    print(idexes)
+    dat=pd.Series(values,index=idexes)
+    res=pd.Series(labels,index=idexes)
 
+    dic={'text':dat,'answer':res}
+
+    return pd.DataFrame(dic)
+
+classfie('src')
